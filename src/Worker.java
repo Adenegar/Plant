@@ -14,18 +14,10 @@ import java.util.Queue;
  * The Worker class implements {@link Runnable} so that each worker can run on
  * its own thread.
  * </p>
+ * 
+ * Note: AI was used to generate javadocs for this file
  */
 public class Worker implements Runnable {
-
-    /**
-     * Maximum allowed oranges waiting for peeling.
-     * <p>
-     * If the number of oranges in the next stage's queue exceeds this value,
-     * fetchers will
-     * pause to prevent overwhelming the pipeline.
-     * </p>
-     */
-    private static final int MAX_WAITING_FOR_PEELING = 10000;
 
     /**
      * Utility method that causes the current thread to sleep.
@@ -156,12 +148,7 @@ public class Worker implements Runnable {
         while (timeToWork) {
             // For fetchers: generate new oranges if there is capacity in the output queue.
             if (type == Plant.WorkerType.Fetchers) {
-                if (after.size() < MAX_WAITING_FOR_PEELING) {
-                    fetchOrange();
-                } else {
-                    delay(10, Thread.currentThread().getName() + " Oranges not peeled, waiting to fetch...");
-                    continue;
-                }
+                fetchOrange();
             } else {
                 // For other worker types: attempt to retrieve an orange from the input queue.
                 Orange o = checkAndRemove();
@@ -171,7 +158,7 @@ public class Worker implements Runnable {
                 } else {
                     // Process the orange
                     o.runProcess();
-                    // Pass the processed orange to the next stage if applicable
+                    // Pass the processed orange to the next stage if applicable, if this is the final state, we're currently not saving the orange to any place
                     if (after != null) {
                         synchronized (after) {
                             after.add(o);

@@ -12,6 +12,8 @@ import java.util.Queue;
  * flow through these stages,
  * and the plant aggregates performance metrics at the end of the simulation.
  * </p>
+ * 
+ * Note: AI was used to generate javadocs for this file
  */
 public class Plant implements Runnable {
     /**
@@ -23,7 +25,7 @@ public class Plant implements Runnable {
     /**
      * The number of plant instances to simulate.
      */
-    private static final int NUM_PLANTS = 2;
+    private static final int NUM_PLANTS = 3;
 
     /**
      * Enumeration representing the different types of workers/stations in the
@@ -41,7 +43,7 @@ public class Plant implements Runnable {
      * non-negligible, which is why our number of fetchers doesn't line up with the
      * listed processing time)
      */
-    private static final int NUMBER_OF_FETCHERS = 10;
+    private static final int NUMBER_OF_FETCHERS = 5;
     /**
      * Number of peeler workers.
      */
@@ -119,12 +121,20 @@ public class Plant implements Runnable {
             totalBottles += p.getBottles();
             totalWasted += p.getWaste();
         }
+        System.out.println("----------------------------------------");
+        System.out.println("Simulation results:");
         System.out.println("Total provided/processed = " + totalProvided + "/" + totalProcessed);
         System.out.println("Created " + totalBottles + " bottles" +
                 ", wasted " + totalWasted + " oranges");
-        // Print the number of oranges left in each queue
+        // Print the number of oranges left in each queue for each plan
+        int plantIndex = 0;
         for (Plant p : plants) {
+            System.out.println("----------------------------------------");
+            System.out.println("Plant " + plantIndex++);
             for (WorkerType type : p.workerQueues.keySet()) {
+                if (type == WorkerType.Fetchers) { // Fetchers create the orange instances, so they don't have any leftover oranges in their 'before' queue
+                    continue;
+                }
                 Queue<Orange> o = p.workerQueues.get(type);
                 System.out.println(type + " Leftover oranges: " + o.size());
             }

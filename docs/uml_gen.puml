@@ -1,0 +1,112 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+'========================
+' Plant Class and Members
+'========================
+class Plant implements Runnable {
+  {static} +PROCESSING_TIME: long
+  {static} -NUM_PLANTS: int
+  {static} -NUMBER_OF_FETCHERS: int
+  {static} -NUMBER_OF_PEELERS: int
+  {static} -NUMBER_OF_SQUEEZERS: int
+  {static} -NUMBER_OF_BOTTLERS: int 
+  {static} -workersPerStation: Map<WorkerType, Integer>
+  
+  +ORANGES_PER_BOTTLE: int = 3
+  -workerQueues: Map<WorkerType, Queue<Orange>>
+  -thread: Thread
+  -workers: Worker[]
+  -timeToWork: boolean
+  
+  +Plant(plantNum: int)
+  +startPlant(): void
+  +stopPlant(): void
+  +waitToStop(): void
+  +run(): void
+  +getProvidedOranges(): int
+  +getProcessedOranges(): int
+  +getBottles(): int
+  +getWaste(): int
+  +getWorkers(): Worker[]
+  {static} +main(args: String[]): void
+  {static} -delay(time: long, errMsg: String): void
+}
+
+'-------------------------------
+' Plant.WorkerType Enumeration
+'-------------------------------
+enum WorkerType {
+  Fetchers
+  Peelers
+  Squeezers
+  Bottlers
+}
+Plant ..> WorkerType : <<enumeration>>
+
+'========================
+' Orange Class and Members
+'========================
+class Orange {
+  -state: State
+  +Orange()
+  +getState(): State
+  +runProcess(): void
+  -doWork(): void
+}
+
+'-------------------------------
+' Orange.State Enumeration
+'-------------------------------
+enum State {
+  Fetched()
+  Peeled()
+  Squeezed()
+  Bottled()
+  Processed()
+  --
+  -finalIndex: int
+  -timeToComplete: int
+  +getNext(): State
+}
+Orange ..> State : <<enumeration>>
+
+'========================
+' Worker Class and Members
+'========================
+class Worker implements Runnable {
+  +ORANGES_PER_BOTTLE: int = 3
+  -thread: Thread
+  -before: Queue<Orange>
+  -after: Queue<Orange>
+  -orangesProvided: int
+  -orangesProcessed: int
+  -type: WorkerType
+  -timeToWork: boolean
+  
+  +Worker(plantNum: int, threadNum: int, type: WorkerType, before: Queue<Orange>, after: Queue<Orange>)
+  +startWorker(): void
+  +stopWorker(): void
+  +waitToStop(): void
+  +run(): void
+  +fetchOrange(): void
+  +checkAndRemove(): Orange
+  +getType(): WorkerType
+  +getOrangesProcessed(): int
+  +getOrangesProvided(): int
+  {static} -delay(time: long, errMsg: String): void
+}
+
+'========================
+' Relationships / Associations
+'========================
+' Plant manages multiple Workers.
+Plant "1" o-- "many" Worker : manages
+
+' Worker uses Queue<Orange> for input and output.
+Worker --> "Queue<Orange>" : before/after
+
+' Worker processes Oranges.
+Worker --> Orange : processes
+
+@enduml

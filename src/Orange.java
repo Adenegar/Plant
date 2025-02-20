@@ -6,6 +6,8 @@
  * Each state corresponds to a stage in the processing pipeline with an
  * associated processing time.
  * </p>
+ * 
+ * Note: AI was used to generate javadocs for this file
  */
 public class Orange {
 
