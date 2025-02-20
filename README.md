@@ -17,11 +17,7 @@ ant run
 
 ## Key Operating System Concepts
 
-- Multithreading:
-
-Each worker runs on its own thread, demonstrating concurrent processing.
-- Synchronization:
-
-Synchronized queues ensure safe communication between threads, preventing race conditions.
+- Multithreading: Each worker runs on its own thread, demonstrating concurrent processing.
+- Synchronization: Synchronized queues ensure safe communication between threads, preventing race conditions.
 - Pipeline Processing:
 The simulation uses a pipeline architecture where oranges pass sequentially through different processing stages, illustrating inter-thread communication and scheduling.
