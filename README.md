@@ -11,6 +11,15 @@ git clone https://github.com/Adenegar/Plant
 ```
 
 ### Build and Run with Ant
+
+Move your working directory to the project if you haven't already
+
+```bash
+cd Plant
+```
+
+Now run the project using ant
+
 ```bash
 ant run
 ```
